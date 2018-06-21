@@ -2,7 +2,9 @@ import { Component, ViewChild, ElementRef, ChangeDetectorRef, Renderer2, OnInit 
 import { NavParams, ViewController, Content, InfiniteScroll } from 'ionic-angular';
 import { CalendarDay, CalendarMonth, CalendarModalOptions } from '../calendar.model'
 import { CalendarService } from '../services/calendar.service';
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import * as momentNs from "moment";
+const moment = momentNs;
 import { pickModes } from "../config";
 
 @Component({

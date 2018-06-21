@@ -32,9 +32,12 @@ export class DemoModalScrollToDateComponent {
       options: options
     });
 
-    myCalendar.present().then((v) =>{
+    myCalendar.present().then((v) => {
       setTimeout(() => {
-        ((myCalendar.overlay as any).instance as CalendarModal).scrollToDate(new Date(this.date.getFullYear(), this.date.getMonth() + 2, this.date.getDate()))
+        let instanceCalendar = (myCalendar.overlay as any).instance as CalendarModal;
+        if (instanceCalendar) {
+          instanceCalendar.scrollToDate(new Date(this.date.getFullYear(), this.date.getMonth() + 2, this.date.getDate()));
+        }
       }, 3000);
     });
 

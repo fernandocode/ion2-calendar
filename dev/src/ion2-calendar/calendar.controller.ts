@@ -13,9 +13,9 @@ export class CalendarController {
 
   /**
    * @deprecated
-   * @param {CalendarModalOptions} calendarOptions
-   * @param {ModalOptions} modalOptions
-   * @returns {any}
+   * @param calendarOptions
+   * @param modalOptions
+   * @returns
    */
   openCalendar(calendarOptions: CalendarModalOptions, modalOptions: ModalOptions = {}): Promise<{}> {
 

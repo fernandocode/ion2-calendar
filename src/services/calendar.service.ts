@@ -8,7 +8,9 @@ import {
   CalendarResult,
   DayConfig
 } from '../calendar.model'
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import * as momentNs from "moment";
+const moment = momentNs;
 import { defaults, pickModes } from "../config";
 
 @Injectable()

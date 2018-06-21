@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { ModalController } from 'ionic-angular';
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import * as momentNs from "moment";
 
 import {
   CalendarModal,
   CalendarModalOptions,
-} from 'ion2-calendar'
+} from 'ion2-calendar';
+const moment = momentNs;
 
 @Component({
   selector: 'demo-modal-locale',

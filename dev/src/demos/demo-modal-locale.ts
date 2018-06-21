@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ModalController } from 'ionic-angular';
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import * as momentNs from "moment";
+const moment = momentNs;
 
 import {
   CalendarModal,

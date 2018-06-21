@@ -10,3 +10,7 @@ dist/
 package-lock.json
 yarn.lock
 
+dist_packagr/
+dist.tgz
+ng-package.json
+public_api.ts

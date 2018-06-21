@@ -15,7 +15,9 @@ import {
 import { CalendarService } from "../services/calendar.service";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import * as moment from 'moment';
+// import * as moment from 'moment';
+import * as momentNs from "moment";
+const moment = momentNs;
 import { defaults, pickModes } from "../config";
 
 export const ION_CAL_VALUE_ACCESSOR: Provider = {
