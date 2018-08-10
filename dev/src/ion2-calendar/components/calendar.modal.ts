@@ -2,7 +2,6 @@ import { Component, ViewChild, ElementRef, ChangeDetectorRef, Renderer2, OnInit 
 import { NavParams, ViewController, Content, InfiniteScroll } from 'ionic-angular';
 import { CalendarDay, CalendarMonth, CalendarModalOptions } from '../calendar.model'
 import { CalendarService } from '../services/calendar.service';
-// import * as moment from 'moment';
 import * as momentNs from "moment";
 const moment = momentNs;
 import { pickModes } from "../config";
@@ -44,6 +43,10 @@ import { pickModes } from "../config";
 
     <ion-content (ionScroll)="onScroll($event)" class="calendar-page"
                  [ngClass]="{'multi-selection': _d.pickMode === 'multi'}">
+ 
+      <ion-infinite-scroll position="top" [enabled]="_d.canBackwardsSelected" (ionInfinite)="prevMonth($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
 
       <div #months>
         <ng-template ngFor let-month [ngForOf]="calendarMonths" [ngForTrackBy]="trackByIndex" let-i="index">
@@ -63,7 +66,7 @@ import { pickModes } from "../config";
 
       </div>
 
-      <ion-infinite-scroll (ionInfinite)="nextMonth($event)">
+      <ion-infinite-scroll position="bottom" (ionInfinite)="nextMonth($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
 
@@ -85,6 +88,7 @@ export class CalendarModal implements OnInit {
   _s: boolean = true;
   _d: CalendarModalOptions;
   actualFirstTime: number;
+  private scrollDirection: string = "down";
 
   constructor(private _renderer: Renderer2,
     public _elementRef: ElementRef,
@@ -101,8 +105,8 @@ export class CalendarModal implements OnInit {
 
   ngAfterViewInit(): void {
     this.findCssClass();
-    if (this._d.canBackwardsSelected)
-      this.backwardsMonth();
+    // if (this._d.canBackwardsSelected)
+    //   this.backwardsMonth();
 
     this.scrollToDefaultDate();
   }
@@ -218,6 +222,48 @@ export class CalendarModal implements OnInit {
     infiniteScroll.complete();
   }
 
+  prevMonth(infiniteScroll: InfiniteScroll): void {
+    if (this.scrollDirection == 'up') {
+      if (!this._d.canBackwardsSelected) {
+        infiniteScroll.complete();
+        return;
+      }
+      this.scrollDirection = 'down';
+      this.infiniteScroll = infiniteScroll;
+
+      let first = this.calendarMonths[0];
+      if (first.original.time <= 0) {
+        this._d.canBackwardsSelected = false;
+        return;
+      }
+      let firstTime = this.actualFirstTime = moment(first.original.time).subtract(1, 'M').valueOf();
+
+      this.calendarMonths.unshift(...this.calSvc.createMonthsByPeriod(firstTime, 1, this._d));
+    }
+    infiniteScroll.complete();
+  }
+
+  // https://github.com/ionic-team/ionic/issues/13060#issuecomment-404008394
+  onScroll($event: any) {
+    return this.scrollDirection = $event.directionY;
+  }
+
+  // onScroll($event: any): void {
+  //   if (!this._d.canBackwardsSelected) return;
+  //   if ($event.scrollTop <= 200 && $event.directionY === "up" && this._s) {
+  //     this._s = !1;
+  //     let lastHeight = this.content.getContentDimensions().scrollHeight;
+  //     setTimeout(() => {
+  //       this.backwardsMonth();
+  //       let nowHeight = this.content.getContentDimensions().scrollHeight;
+  //       this.content.scrollTo(0, nowHeight - lastHeight, 0)
+  //         .then(() => {
+  //           this._s = !0;
+  //         })
+  //     }, 180)
+  //   }
+  // }
+
   backwardsMonth(): void {
     let first = this.calendarMonths[0];
     if (first.original.time <= 0) {
@@ -242,22 +288,6 @@ export class CalendarModal implements OnInit {
 
   scrollToDefaultDate(): void {
     this.scrollToDate(this._d.defaultScrollTo);
-  }
-
-  onScroll($event: any): void {
-    if (!this._d.canBackwardsSelected) return;
-    if ($event.scrollTop <= 200 && $event.directionY === "up" && this._s) {
-      this._s = !1;
-      let lastHeight = this.content.getContentDimensions().scrollHeight;
-      setTimeout(() => {
-        this.backwardsMonth();
-        let nowHeight = this.content.getContentDimensions().scrollHeight;
-        this.content.scrollTo(0, nowHeight - lastHeight, 0)
-          .then(() => {
-            this._s = !0;
-          })
-      }, 180)
-    }
   }
 
   findInitMonthNumber(date: Date): number {

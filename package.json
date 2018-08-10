@@ -1,11 +1,12 @@
 {
   "name": "ion2-code-calendar",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A date picker component for ionic2 ",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
     "start": "cd ./dev && ionic serve",
+    "start-device": "cd ./dev && ionic cordova run android -l --address 10.1.1.102",
     "start-code": "cd ./dev && ionic serve --port 8101 --livereload-port 53704 --dev-logger-port 53704",
     "clean:dist": "rm -rf dist",
     "remove:dist": "RD /S /Q dist",
